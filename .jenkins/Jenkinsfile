@@ -11,23 +11,23 @@ pipeline {
         githubPush()
     }
     stages {
-        stage('동작 테스트를 위한 소스 복사 및 테스트') {
-            // agent {
-            //     docker {
-            //         image 'nginx:latest'
-            //         args '-u root --name nginx'
-            //         reuseNode true
-            //     }
-            // }
-            steps {
-                sh 'cp ./src/* /usr/share/nginx/html/'
-                echo '테스트 과정 생략...'
-                // script {
-                //     sh 'curl -s -I http://localhost > check'
-                //     sh 'grep -E "HTTP/.+2[0-9]{2} OK" check'
-                // }
-            }
-        }
+        // stage('동작 테스트를 위한 소스 복사 및 테스트') {
+        //     // agent {
+        //     //     docker {
+        //     //         image 'nginx:latest'
+        //     //         args '-u root --name nginx'
+        //     //         reuseNode true
+        //     //     }
+        //     // }
+        //     steps {
+        //         sh 'cp ./src/* /usr/share/nginx/html/'
+        //         echo '테스트 과정 생략...'
+        //         // script {
+        //         //     sh 'curl -s -I http://localhost > check'
+        //         //     sh 'grep -E "HTTP/.+2[0-9]{2} OK" check'
+        //         // }
+        //     }
+        // }
         stage('소나 큐브로 품질 테스트 진행') {
             steps {
                 script {
