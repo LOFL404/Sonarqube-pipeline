@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        GITHUB_CREDENTIAL = credentials('github-cicd-pipeline')
-        DOCKER_CREDENTIAL = credentials('docker-token')
+        GITHUB_CREDENTIAL = credentials('github-flask-cicd')
+        DOCKER_CREDENTIAL = credentials('docker-hub')
         TAG_VERSION = 'v1.0.0'
         PROJECT_NAME = 'static-web'
         REPO_NAME = 'cicd-pipeline'
@@ -83,7 +83,7 @@ pipeline {
         //                     -H "Authorization: Bearer ${GITHUB_CREDENTIAL_PSW}" \
         //                     -H "X-GitHub-Api-Version: 2022-11-28" \
         //                     -H "Content-Type: application/octet-stream" \
-        //                     "https://uploads.github.com/repos/AnByoungHyun/${REPO_NAME}/releases/${id}/assets?name=${PROJECT_NAME}.tar.gz" \
+        //                     "https://uploads.github.com/repos/LOFL404/${REPO_NAME}/releases/${id}/assets?name=${PROJECT_NAME}.tar.gz" \
         //                     --data-binary "@${PROJECT_NAME}.tar.gz"
         //             """
         //         }
@@ -104,7 +104,7 @@ pipeline {
                 sh "docker -H tcp://docker-server:2375 rm web1"
                 sh """
                     docker -H tcp://docker-server:2375 run -it -d -p 8080:80 --name web1 \
-                    abhyuni/static-web:${TAG_VERSION}
+                    woogi567/static-web:${TAG_VERSION}
                 """
             }
         }
