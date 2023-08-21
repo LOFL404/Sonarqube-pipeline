@@ -12,13 +12,13 @@ pipeline {
     }
     stages {
         stage('동작 테스트를 위한 소스 복사 및 테스트') {
-            agent {
-                docker {
-                    image 'nginx:latest'
-                    args '-u root --name nginx'
-                    reuseNode true
-                }
-            }
+            // agent {
+            //     docker {
+            //         image 'nginx:latest'
+            //         args '-u root --name nginx'
+            //         reuseNode true
+            //     }
+            // }
             steps {
                 sh 'cp ./src/* /usr/share/nginx/html/'
                 echo '테스트 과정 생략...'
