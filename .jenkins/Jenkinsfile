@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        GITHUB_CREDENTIAL = credentials('github-flask-cicd')
+        GITHUB_CREDENTIAL = credentials('github')
         DOCKER_CREDENTIAL = credentials('docker-hub')
         TAG_VERSION = 'v1.0.0'
         PROJECT_NAME = 'static-web'
@@ -11,7 +11,7 @@ pipeline {
         githubPush()
     }
     stages {
-        stage('동작 테스트를 위한 소스 복사 및 테스트') {
+        stage('Source copy and test for operation test') {
             agent {
                 docker {
                     image 'nginx:latest'
@@ -28,7 +28,7 @@ pipeline {
                 }
             }
         }
-        stage('소나 큐브로 품질 테스트 진행') {
+        stage('Quality testing with sonar cube') {
             steps {
                 script {
                     withSonarQubeEnv('Sonar-Server') {
@@ -47,12 +47,12 @@ pipeline {
                 }
             }
         }
-        stage('소스 코드 압축') {
+        stage('source code compression') {
             steps {
                 sh "tar -czvf ${PROJECT_NAME}.tar.gz src/"
             }
         }
-        // stage('압축한 소스 코드 깃허브에 배포') {
+        // stage('Compressed source code distributed on Github') {
         //     steps {
         //         script {
         //             def response = sh(script: """
@@ -89,7 +89,7 @@ pipeline {
         //         }
         //     }
         // }
-        stage('압축한 소스 코드 도커 이미지로 빌드 및 푸쉬') {
+        stage('Source Code Docker Image Build and Push') {
             steps {
                 sh "docker login -u ${DOCKER_CREDENTIAL_USR} -p ${DOCKER_CREDENTIAL_PSW}"
                 sh "docker build -t ${DOCKER_CREDENTIAL_USR}/${PROJECT_NAME}:latest -f .docker/Dockerfile ."
@@ -98,7 +98,7 @@ pipeline {
                 sh "docker push ${DOCKER_CREDENTIAL_USR}/${PROJECT_NAME}:latest"
             }
         }
-        stage('도커 허브에 푸쉬한 이미지로 docker-server 에 동작') {
+        stage('Runs on docker-server with image pushed to docker hub') {
             steps {
                 sh "docker -H tcp://docker-server:2375 stop web1"
                 sh "docker -H tcp://docker-server:2375 rm web1"
