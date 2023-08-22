@@ -11,7 +11,7 @@ pipeline {
         githubPush()
     }
     stages {
-        stage('Source copy and test for operation test') {
+        stage('동작 테스트를 위한 소스 복사 및 테스트') {
             agent {
                 docker {
                     image 'nginx:latest'
@@ -28,7 +28,7 @@ pipeline {
                 }
             }
         }
-        stage('Quality testing with sonar cube') {
+        stage('소나 큐브로 품질 테스트 진행') {
             steps {
                 script {
                     withSonarQubeEnv('Sonar-Server') {
@@ -47,12 +47,12 @@ pipeline {
                 }
             }
         }
-        stage('source code compression') {
+        stage('소스 코드 압축') {
             steps {
                 sh "tar -czvf ${PROJECT_NAME}.tar.gz src/"
             }
         }
-        // stage('Compressed source code distributed on Github') {
+        // stage('압축한 소스 코드 깃허브에 배포') {
         //     steps {
         //         script {
         //             def response = sh(script: """
@@ -89,7 +89,7 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Source Code Docker Image Build and Push') {
+        stage('압축한 소스 코드 도커 이미지로 빌드 및 푸쉬') {
             steps {
                 sh "docker login -u ${DOCKER_CREDENTIAL_USR} -p ${DOCKER_CREDENTIAL_PSW}"
                 sh "docker build -t ${DOCKER_CREDENTIAL_USR}/${PROJECT_NAME}:latest -f .docker/Dockerfile ."
@@ -98,7 +98,7 @@ pipeline {
                 sh "docker push ${DOCKER_CREDENTIAL_USR}/${PROJECT_NAME}:latest"
             }
         }
-        stage('Runs on docker-server with image pushed to docker hub') {
+        stage('도커 허브에 푸쉬한 이미지로 docker-server 에 동작') {
             steps {
                 sh "docker -H tcp://docker-server:2375 stop web1"
                 sh "docker -H tcp://docker-server:2375 rm web1"
@@ -110,9 +110,9 @@ pipeline {
         }
     }
 
-    post {
-        cleanup {
-            cleanWs()
-        }
-    }
+    // post {
+    //     cleanup {
+    //         cleanWs()
+    //     }
+    // }
 }
